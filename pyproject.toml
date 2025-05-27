@@ -8,3 +8,8 @@ dependencies = [
     "cffi>=1.17.1",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "ipykernel>=6.29.5",
+    "matplotlib>=3.10.3",
+]
