@@ -1,6 +1,7 @@
 import pytest
 
 from keysight_b1530a.errors import ERROR_MESSAGES, WGFMUError, check_error
+from keysight_b1530a.utils import handle_wgfmu_response
 
 
 @pytest.mark.parametrize(
@@ -27,3 +28,23 @@ def test_error_handling(error_code, expected_message):
 
     assert excinfo.value.code == error_code
     assert str(excinfo.value) == f"WGFMU Error {error_code}: {expected_message}"
+
+
+@pytest.mark.parametrize(
+    "result, expected",
+    [
+        (0, None),  # Single success code
+        ((0, 1), 1),  # Tuple with success code and one additional value
+        ((0, 1, 2), (1, 2)),  # Tuple with success code and multiple values
+        ((0, [1, 2]), [1, 2]),  # Tuple with success code and a list
+        ((0, "data"), "data"),  # Tuple with success code and string data
+    ],
+)
+def test_success_handling(result, expected):
+    """Test successful handling of function results."""
+
+    @handle_wgfmu_response
+    def successful_function():
+        return result
+
+    assert successful_function() == expected
