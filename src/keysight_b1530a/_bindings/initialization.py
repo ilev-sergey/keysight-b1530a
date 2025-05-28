@@ -11,9 +11,6 @@ def open_session(address: str = "USB1::0x0957::0x0001::0001::0::INSTR") -> None:
 
     Args:
         address (str): VISA address of the instrument. Defaults to Keysight B1500A over USB.
-
-    Raises:
-        WGFMUError: If the session could not be opened.
     """
     return lib.WGFMU_openSession(address.encode("utf-8"))
 
@@ -22,9 +19,6 @@ def open_session(address: str = "USB1::0x0957::0x0001::0001::0::INSTR") -> None:
 def close_session() -> None:
     """
     Closes the session (communication with B1500A) opened by the open_session function.
-
-    Raises:
-        WGFMUError: If the session could not be closed.
     """
     return lib.WGFMU_closeSession()
 
@@ -33,9 +27,6 @@ def close_session() -> None:
 def initialize() -> None:
     """
     Resets all WGFMU channels. Does not clear the software setup information of the instrument library.
-
-    Raises:
-        WGFMUError: If initialization fails.
     """
     return lib.WGFMU_initialize()
 
@@ -43,7 +34,7 @@ def initialize() -> None:
 @handle_wgfmu_response
 def clear() -> None:
     """
-    Clears the instrument library’s software setup information such as all pattern and sequence information, error, error summary, warning, warning summary, warning level, warning level for the WGFMU_treatWarningsAsErrors function.
+    Clears the instrument library’s software setup information such as all pattern and sequence information, error, error summary, warning, warning summary, warning level, warning level for the `treat_warnings_as_errors` function.
     """
     return lib.WGFMU_clear()
 
@@ -51,10 +42,7 @@ def clear() -> None:
 @handle_wgfmu_response
 def self_test() -> None:
     """
-    Performs the self-test for the mainframe and all modules
-
-    Raises:
-        WGFMUError: If the self-test fails.
+    Performs the self-test for the mainframe and all modules.
     """
     return lib.WGFMU_doSelfTest()
 
@@ -62,10 +50,10 @@ def self_test() -> None:
 @handle_wgfmu_response
 def _get_channel_count_ptr() -> int:
     """
-    Retrieves the number of channels available in the instrument.
+    Returns the number of WGFMU channels installed in the B1500A connected to this session.
 
     Returns:
-        int: The number of channels available.
+        tuple: A pointer to an integer that will hold the number of WGFMU channels.
     """
 
     channel_count_ptr = ffi.new("int *")
@@ -77,11 +65,7 @@ def _get_channel_count_ptr() -> int:
 @handle_wgfmu_response
 def get_channel_ids():
     """
-    Reads the channel id of the WGFMU channels installed in the B1500A
-    connected to this session.
-
-    Returns:
-        tuple: A tuple containing two arrays: times and values.
+    Reads the channel id of the WGFMU channels installed in the B1500A connected to this session.
     """
     channel_count_ptr = _get_channel_count_ptr()
 
