@@ -37,6 +37,10 @@ def test_error_handling(error_code, expected_message):
         ((0, 1), 1),  # Tuple with success code and one additional value
         ((0, 1, 2), (1, 2)),  # Tuple with success code and multiple values
         ((0, [1, 2]), [1, 2]),  # Tuple with success code and a list
+        (
+            (0, [1, 2], [1, 2]),
+            ([1, 2], [1, 2]),
+        ),  # Tuple with success code and multiple lists
         ((0, "data"), "data"),  # Tuple with success code and string data
     ],
 )
