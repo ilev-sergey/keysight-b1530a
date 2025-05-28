@@ -41,6 +41,14 @@ def initialize() -> None:
 
 
 @handle_wgfmu_response
+def clear() -> None:
+    """
+    Clears the instrument library’s software setup information such as all pattern and sequence information, error, error summary, warning, warning summary, warning level, warning level for the WGFMU_treatWarningsAsErrors function.
+    """
+    return lib.WGFMU_clear()
+
+
+@handle_wgfmu_response
 def self_test() -> None:
     """
     Performs the self-test for the mainframe and all modules
