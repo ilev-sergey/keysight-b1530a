@@ -22,7 +22,6 @@ def _get_measurement_data_size(channel: int = DEFAULT_CHANNEL) -> int:
     error_code = lib.WGFMU_getMeasureValueSize(
         channel, measured_size_ptr, total_size_ptr
     )
-
     return error_code, measured_size_ptr[0]
 
 
