@@ -1,10 +1,10 @@
 import numpy as np
 
 from .._ffi import ffi, lib
-from ..utils import handle_wgfmu_response
+from ..utils import handle_wgfmu_response, strip_error_code
 
 
-@handle_wgfmu_response
+@strip_error_code  # doesn't use check_error in order not to raise an error if the session is already opened
 def open_session(address: str = "USB1::0x0957::0x0001::0001::0::INSTR") -> None:
     """
     Opens the communication session with the B1500A by using the WGFMU instrument library.

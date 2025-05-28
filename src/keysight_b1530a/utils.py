@@ -5,7 +5,7 @@ from typing import Any
 from .errors import check_error
 
 
-def strip_success_code(func: Callable[..., Any]) -> Callable[..., Any]:
+def strip_error_code(func: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator to transform results from WGFMU function calls."""
 
     @functools.wraps(func)
@@ -13,13 +13,11 @@ def strip_success_code(func: Callable[..., Any]) -> Callable[..., Any]:
         result = func(*args, **kwargs)
 
         # Transform single success code
-        if isinstance(result, int) and result == 0:
+        if isinstance(result, int):
             return None
 
         # Transform tuple with success code as first element
-        elif (
-            isinstance(result, tuple) and isinstance(result[0], int) and result[0] == 0
-        ):
+        elif isinstance(result, tuple) and isinstance(result[0], int):
             remaining = result[1:]
             if len(remaining) == 1:
                 return remaining[0]
@@ -37,4 +35,4 @@ def handle_wgfmu_response(func: Callable[..., Any]) -> Callable[..., Any]:
     - Raises WGFMUError if a negative error code is returned
     - Removes success code (0) from the successful function call results
     """
-    return strip_success_code(check_error(func))
+    return strip_error_code(check_error(func))
