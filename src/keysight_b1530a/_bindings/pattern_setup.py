@@ -17,10 +17,10 @@ def create_pattern(name: str, start_voltage: float) -> None:
 @handle_wgfmu_response
 def add_vector(name: str, time_step: float, voltage: float) -> None:
     """
-    Specifies a scalar data by using time_step and voltage, and connects it to the last point of the specified waveform pattern. This adds a vector to the pattern. See “WGFMU Setup Functions” on page 4-77 for the error check of parameters.
+    Specifies a scalar data and connects it to the last point of the specified waveform pattern. This adds a vector to the pattern.
 
     Execution Conditions:
-    Waveform pattern specified by pattern must be created before this function is executed. See WGFMU_createPattern and WGFMU_createXxxPattern to create a pattern data.
+    Waveform pattern specified by pattern must be created before this function is executed. See `create_pattern` and to create a pattern data.
 
     Args:
         name (str): The name of the pattern to which the vector will be added.
