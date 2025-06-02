@@ -66,13 +66,13 @@ def _get_channel_count_ptr() -> int:
 def get_channel_ids():
     """
     Reads the channel id of the WGFMU channels installed in the B1500A connected to this session.
+
+    Returns:
+        list(int): List of channel IDs.
     """
     channel_count_ptr = _get_channel_count_ptr()
+    channel_ids_ptr = ffi.new("int[]", channel_count_ptr[0])
 
-    channel_ids = np.zeros(channel_count_ptr, dtype=int)
-    channel_id_ptr = ffi.new("int *")
+    error_code = lib.WGFMU_getChannelIds(channel_ids_ptr, channel_count_ptr)
 
-    error_code = lib.WGFMU_getChannelIds(channel_id_ptr, channel_count_ptr)
-    channel_ids = channel_id_ptr[0]
-
-    return error_code, channel_ids
+    return error_code, list(channel_ids_ptr)
