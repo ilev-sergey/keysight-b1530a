@@ -28,13 +28,13 @@ def _get_measurement_data_size(channel: WGFMUChannel = WGFMUChannel.CH1) -> int:
 @handle_wgfmu_response
 def get_measurement_data(channel: WGFMUChannel = WGFMUChannel.CH1) -> int:
     """
-    Retrieves the measurement data from the specified channel.
+    Retrieves the measurement data (voltage or current depending on the measure mode) from the specified channel.
 
     Args:
         channel (WGFMUChannel): The channel to retrieve data from. Defaults to CH1.
 
     Returns:
-        tuple: A tuple containing two arrays: times and values.
+        tuple: A tuple containing two arrays: times and values (voltages or currents).
     """
     num_points = _get_measurement_data_size(channel)
 

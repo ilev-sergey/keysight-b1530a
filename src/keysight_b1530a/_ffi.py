@@ -1,3 +1,17 @@
+"""
+Foreign Function Interface (FFI) for the Keysight B1530A WGFMU instrument.
+
+This module provides the low-level FFI initialization for accessing the WGFMU C library.
+It handles loading the DLL, and making the library functions available to Python code.
+
+The module exposes:
+- `lib`: The loaded WGFMU library with all C functions available for calling. This object is used to interact with the underlying C library. Library functions are wrapped in Python-friendly interfaces and available through the _bindings module.
+- `ffi`: The CFFI FFI instance for memory management and data conversion
+
+Note: This module is for internal use by the keysight_b1530a package and typically
+should not be imported directly by end users.
+"""
+
 import logging
 import re
 from pathlib import Path
@@ -8,7 +22,7 @@ from cffi import FFI
 
 def load_library(header_path: Path, dll_path: Path) -> Any:
     """
-    Load the WGFMU library using CFFI.
+    Load the DLL that contains C functions for operating the B1530A device.
 
     Args:
         header_path: Path to the header file

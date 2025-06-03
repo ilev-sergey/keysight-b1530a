@@ -1,3 +1,27 @@
+"""
+Enumeration types for the Keysight B1530A WGFMU instrument.
+
+This module defines various enumeration types used to configure and control the
+B1530A WGFMU instrument. These enumerations represent the native constants from
+the WGFMU library, providing type safety and better code readability.
+
+The module includes:
+- `WGFMUOperationMode`: Operation modes for the WGFMU (DC, FASTIV, PG, SMU)
+- `WGFMUMeasureEvent`: Measurement event modes (AVERAGED, RAW)
+- `WGFMUMeasureMode`: Measurement modes (VOLTAGE, CURRENT)
+
+Each enumeration value includes detailed documentation about its purpose and usage
+constraints directly from the WGFMU instrument's documentation.
+
+Example usage:
+    ```python
+    from keysight_b1530a.enums import WGFMUOperationMode
+
+    # Set channel to Fast IV mode
+    wgfmu.set_operation_mode(1, WGFMUOperationMode.FASTIV)
+    ```
+"""
+
 from enum import IntEnum
 
 

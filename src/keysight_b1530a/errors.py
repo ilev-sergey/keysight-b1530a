@@ -1,3 +1,24 @@
+"""
+Error handling for the Keysight B1530A WGFMU instrument.
+
+This module provides error code definitions, error handling utilities, and custom exceptions
+for the Keysight B1530A WGFMU instrument. It translates numeric error codes returned by
+the all functions in the WGFMU library into meaningful Python exceptions with descriptive messages.
+
+The module includes:
+- `WGFMUErrorCode`: Enumeration of error codes defined by the WGFMU library
+- `WGFMUError`: Exception class for WGFMU-specific errors
+- `check_error`: Decorator for automatically checking return values from WGFMU functions
+
+Example usage:
+    ```python
+    @check_error
+    def my_wgfmu_function():
+        # If this returns a negative error code, an exception will be raised
+        return lib.wgfmu_some_function()
+    ```
+"""
+
 import functools
 from enum import IntEnum
 from typing import Any, Callable
@@ -76,7 +97,22 @@ class WGFMUError(Exception):
 
 
 def check_error(func: Callable[..., Any]) -> Callable[..., Any]:
-    """Decorator to check for errors in WGFMU function calls."""
+    """
+    Decorator to check for errors in WGFMU function calls.
+
+    This decorator checks the return value of WGFMU function calls for error codes.
+    If a negative integer is returned (indicating an error), it raises a WGFMUError
+    with the appropriate error message.
+
+    Parameters:
+        func (Callable): The function to wrap.
+
+    Returns:
+        Callable: Original function result on success (error code 0).
+
+    Raises:
+        WGFMUError: When the function returns a negative error code.
+    """
 
     @functools.wraps(func)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
