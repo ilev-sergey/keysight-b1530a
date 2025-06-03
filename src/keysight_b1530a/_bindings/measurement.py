@@ -1,5 +1,6 @@
 from .._ffi import lib
 from ..utils import handle_wgfmu_response
+from .config import WGFMUChannel
 
 
 @handle_wgfmu_response
@@ -19,11 +20,11 @@ def wait_until_completed() -> None:
 
 
 @handle_wgfmu_response
-def connect(channel: int) -> None:
+def connect(channel: WGFMUChannel = WGFMUChannel.CH1) -> None:
     """
     Enables the output of the specified WGFMU channel and the RSU connected to the WGFMU.
 
     Args:
-        channel (int): The channel to enable.
+        channel (WGFMUChannel): The channel to enable.
     """
     return lib.WGFMU_connect(channel)
