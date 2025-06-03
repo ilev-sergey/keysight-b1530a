@@ -1,18 +1,21 @@
 from .._ffi import ffi, lib
-from ..utils import handle_wgfmu_response
+from ..utils import strip_error_code
 
 
-@handle_wgfmu_response
-def get_error_detail() -> str:
-    """Get detailed error information from the WGFMU library."""
-    # Get error summary size
+@strip_error_code
+def get_error_summary() -> str:
+    """Reads the error summary string which contains all errors. Useful when something goes wrong. The string is cleared by the `initialization.clear` function.
+
+    Returns:
+        str: A string containing the error code, description and additional information. If no errors are found, it returns "No errors found."
+    """
     size_ptr = ffi.new("int*")
     error_code = lib.WGFMU_getErrorSummarySize(size_ptr)
     size = size_ptr[0]
 
     if size > 0:
-        # Allocate buffer and get error summary
         buffer = ffi.new(f"char[{size}]")
         lib.WGFMU_getErrorSummary(buffer, size_ptr)
         return error_code, ffi.string(buffer).decode("utf-8")
-    return error_code, "No error details available"
+
+    return error_code, "No errors found."
