@@ -37,3 +37,16 @@ class WGFMUMeasureEvent(IntEnum):
 
     All of the measurement data used for averaging will be returned and the number of returned data will be `points * (1 + int(average/(5 * 1e-9)))`.
     """
+
+
+class WGFMUMeasureMode(IntEnum):
+    """Measurement modes for the WGFMU library."""
+
+    VOLTAGE = 4000
+    """
+    Voltage measurement mode, default setting. Changing the mode to this mode does not change the current measurement range setting. Available for the Fast IV, PG, and DC operation modes.
+    """
+    CURRENT = 4001
+    """
+    Current measurement mode. Changing the mode to this mode changes the voltage measurement range to the 5 V range. Available for the Fast IV and DC operation modes.
+    """

@@ -1,4 +1,5 @@
 from .._ffi import lib
+from ..enums import WGFMUMeasureMode
 from ..utils import handle_wgfmu_response
 from .config import WGFMUChannel
 
@@ -28,3 +29,18 @@ def connect(channel: WGFMUChannel = WGFMUChannel.CH1) -> None:
         channel (WGFMUChannel): The channel to enable.
     """
     return lib.WGFMU_connect(channel)
+
+
+@handle_wgfmu_response
+def set_measure_mode(
+    channel: WGFMUChannel = WGFMUChannel.CH1,
+    mode: WGFMUMeasureMode = WGFMUMeasureMode.VOLTAGE,
+) -> None:
+    """
+    Sets the measurement mode of the specified WGFMU channel.
+
+    Args:
+        channel (WGFMUChannel): The channel to set the measurement mode for.
+        mode (WGFMUMeasureMode): The measurement mode to set.
+    """
+    return lib.WGFMU_setMeasureMode(channel, mode)
