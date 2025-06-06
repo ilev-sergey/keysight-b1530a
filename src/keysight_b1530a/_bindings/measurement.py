@@ -1,5 +1,5 @@
 from .._ffi import lib
-from ..enums import WGFMUMeasureMode
+from ..enums import WGFMUMeasureCurrentRange, WGFMUMeasureMode
 from ..utils import handle_wgfmu_response
 from .config import WGFMUChannel
 
@@ -44,3 +44,18 @@ def set_measure_mode(
         mode (WGFMUMeasureMode): The measurement mode to set.
     """
     return lib.WGFMU_setMeasureMode(channel, mode)
+
+
+@handle_wgfmu_response
+def set_measure_current_range(
+    channel: WGFMUChannel = WGFMUChannel.CH1,
+    range: WGFMUMeasureCurrentRange = WGFMUMeasureCurrentRange.RANGE_10_UA,
+) -> None:
+    """
+    Sets the current measurement range of the specified WGFMU channel.
+
+    Args:
+        channel (WGFMUChannel): The channel to set the measurement range for.
+        range (WGFMUMeasureCurrentRange): The current measurement range to set.
+    """
+    return lib.WGFMU_setMeasureCurrentRange(channel, range)

@@ -74,3 +74,28 @@ class WGFMUMeasureMode(IntEnum):
     """
     Current measurement mode. Changing the mode to this mode changes the voltage measurement range to the 5 V range. Available for the Fast IV and DC operation modes.
     """
+
+
+class WGFMUMeasureCurrentRange(IntEnum):
+    """Current measurement ranges for the WGFMU library."""
+
+    RANGE_1_UA = 6001
+    """
+    1 uA controlled range (from -1 uA to 1 uA).
+    """
+    RANGE_10_UA = 6002
+    """
+    10 uA controlled range (from -10 uA to 10 uA).
+    """
+    RANGE_100_UA = 6003
+    """
+    100 uA controlled range (from -100 uA to 100 uA).
+    """
+    RANGE_1_MA = 6004
+    """
+    1 mA controlled range (from -1 mA to 1 mA).
+    """
+    RANGE_10_MA = 6005
+    """
+    10 mA controlled range (from -10 mA to 10 mA).
+    """
