@@ -50,3 +50,26 @@ def get_measurement_data(channel: WGFMUChannel = WGFMUChannel.CH1) -> int:
         values[i] = value_ptr[0]
 
     return error_code, times, values
+
+
+@handle_wgfmu_response
+def export_measurement_setup(
+    filename: str = "measurement_setup.csv",
+) -> None:
+    """
+    This function creates a setup summary report and saves it as a csv (comma separated
+    values) file.
+
+    The summary report contains the pattern data, event data, and sequence
+    data for the channels configured by the instrument library. The file can be read by
+    using a spreadsheet software. This is effective for quick debugging. See Figure 4-1
+    for example data.
+
+    If the specified file does not exist, this function creates new file. If the specified file
+    exists, this function overwrites the file. Error occurs if an invalid path is specified, a
+    file is not created, or a setup summary is not written.
+
+    Args:
+        filename (str): Name of the summary report file. Defaults to "measurement_setup.csv".
+    """
+    return lib.WGFMU_exportAscii(filename.encode("utf-8"))
