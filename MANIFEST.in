@@ -1,0 +1,2 @@
+include src/keysight_b1530a/lib/wgfmu.dll
+include src/keysight_b1530a/lib/wgfmu.h
