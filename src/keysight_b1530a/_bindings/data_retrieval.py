@@ -1,3 +1,5 @@
+from webbrowser import get
+
 import numpy as np
 
 from .._ffi import ffi, lib
@@ -49,7 +51,33 @@ def get_measurement_data(channel: WGFMUChannel = WGFMUChannel.CH1) -> int:
         times[i] = time_ptr[0]
         values[i] = value_ptr[0]
 
-    return error_code, times, values
+    return error_code, np.array(times), np.array(values)
+
+
+@handle_wgfmu_response
+def get_voltage_value(
+    channel: WGFMUChannel = WGFMUChannel.CH1, time: float = 0.0
+) -> float:
+    """
+    Retrieves the voltage value at a specific time from the specified channel.
+
+    Args:
+        channel (WGFMUChannel): The channel to retrieve data from. Defaults to CH1.
+        time (float): The time at which to retrieve the voltage value. Defaults to 0.0.
+
+    Returns:
+        float: The voltage value at the specified time.
+    """
+    value_ptr = ffi.new("double *")
+    error_code = lib.WGFMU_getInterpolatedForceValue(channel, time, value_ptr)
+    return error_code, value_ptr[0]
+
+
+@handle_wgfmu_response
+def get_voltage_data(channel: WGFMUChannel = WGFMUChannel.CH1):
+    times, _ = get_measurement_data(channel)
+    voltages = [get_voltage_value(channel, time) for time in times]
+    return np.array(voltages)
 
 
 @handle_wgfmu_response
