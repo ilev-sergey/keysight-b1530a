@@ -30,6 +30,17 @@ def connect(channel: WGFMUChannel = WGFMUChannel.CH1) -> None:
     """
     return lib.WGFMU_connect(channel)
 
+    
+@handle_wgfmu_response
+def disconnect(channel: WGFMUChannel = WGFMUChannel.CH1) -> None:
+    """
+    Enables the output of the specified WGFMU channel and the RSU connected to the WGFMU.
+
+    Args:
+        channel (WGFMUChannel): The channel to enable.
+    """
+    return lib.WGFMU_disconnect(channel)
+
 
 @handle_wgfmu_response
 def set_measure_mode(
