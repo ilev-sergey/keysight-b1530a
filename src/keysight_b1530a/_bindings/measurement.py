@@ -30,7 +30,7 @@ def connect(channel: WGFMUChannel = WGFMUChannel.CH1) -> None:
     """
     return lib.WGFMU_connect(channel)
 
-    
+
 @handle_wgfmu_response
 def disconnect(channel: WGFMUChannel = WGFMUChannel.CH1) -> None:
     """

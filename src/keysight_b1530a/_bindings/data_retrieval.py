@@ -1,5 +1,3 @@
-from webbrowser import get
-
 import numpy as np
 
 from .._ffi import ffi, lib
@@ -21,9 +19,7 @@ def _get_measurement_data_size(channel: WGFMUChannel = WGFMUChannel.CH1) -> int:
 
     measured_size_ptr = ffi.new("int *")
     total_size_ptr = ffi.new("int *")
-    error_code = lib.WGFMU_getMeasureValueSize(
-        channel, measured_size_ptr, total_size_ptr
-    )
+    error_code = lib.WGFMU_getMeasureValueSize(channel, measured_size_ptr, total_size_ptr)
     return error_code, measured_size_ptr[0]
 
 
@@ -55,9 +51,7 @@ def get_measurement_data(channel: WGFMUChannel = WGFMUChannel.CH1) -> int:
 
 
 @handle_wgfmu_response
-def get_voltage_value(
-    channel: WGFMUChannel = WGFMUChannel.CH1, time: float = 0.0
-) -> float:
+def get_voltage_value(channel: WGFMUChannel = WGFMUChannel.CH1, time: float = 0.0) -> float:
     """
     Retrieves the voltage value at a specific time from the specified channel.
 

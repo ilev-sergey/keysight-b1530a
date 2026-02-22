@@ -1,5 +1,3 @@
-import numpy as np
-
 from .._ffi import ffi, lib
 from ..utils import handle_wgfmu_response, strip_error_code
 

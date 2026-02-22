@@ -46,6 +46,4 @@ def add_vectors(name: str, time_steps: list[float], voltages: list[float]) -> No
     if len(time_steps) != len(voltages):
         raise ValueError("time_steps and voltages must have the same length.")
 
-    return lib.WGFMU_addVectors(
-        name.encode("utf-8"), time_steps, voltages, len(time_steps)
-    )
+    return lib.WGFMU_addVectors(name.encode("utf-8"), time_steps, voltages, len(time_steps))
