@@ -1,5 +1,7 @@
 from unittest.mock import patch
 
+import pytest
+
 from keysight_b1530a._ffi import _LazyLibrary
 
 
@@ -30,12 +32,9 @@ def test_lazy_library_caches_after_load():
         mock_load.assert_called_once()
 
 
-def test_lazy_library_clear_error_message():
-    """When DLL fails to load, error should mention Keysight IO Libraries."""
+def test_load_library_clear_error_message():
+    """When DLL fails to load, error should mention Keysight IO Libraries download URL."""
     lazy = _LazyLibrary()
-    with patch("keysight_b1530a._ffi.load_library", side_effect=OSError("Keysight IO Libraries Suite")):
-        try:
+    with patch("cffi.FFI.dlopen", side_effect=OSError("error 0x7e")):
+        with pytest.raises(OSError, match="Keysight IO Libraries Suite"):
             _ = lazy.some_function
-            assert False, "Should have raised OSError"
-        except OSError as e:
-            assert "Keysight IO Libraries" in str(e)

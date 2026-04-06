@@ -26,11 +26,12 @@ HEADER_FILE = LIBRARY_DIR / "wgfmu.h"
 DLL_FILE = LIBRARY_DIR / "wgfmu.dll"
 
 
-def load_library(header_path: Path, dll_path: Path) -> Any:
+def load_library(ffi_instance: FFI, header_path: Path, dll_path: Path) -> Any:
     """
     Load the DLL that contains C functions for operating the B1530A device.
 
     Args:
+        ffi_instance: The shared FFI instance to use for cdef and dlopen
         header_path: Path to the header file
         dll_path: Path to the DLL file
 
@@ -42,13 +43,11 @@ def load_library(header_path: Path, dll_path: Path) -> Any:
 
     header = preprocess_header(header)
 
-    # Set up CFFI
-    _ffi = FFI()
-    _ffi.cdef(header)
+    ffi_instance.cdef(header)
 
     # Load the DLL
     try:
-        return _ffi.dlopen(str(dll_path))
+        return ffi_instance.dlopen(str(dll_path))
     except OSError as e:
         raise OSError(
             f"Failed to load wgfmu.dll: {e}\n"
@@ -81,7 +80,7 @@ class _LazyLibrary:
 
     def _load(self):
         if self._lib is None:
-            self._lib = load_library(HEADER_FILE, DLL_FILE)
+            self._lib = load_library(ffi, HEADER_FILE, DLL_FILE)
             logger.info("WGFMU library loaded successfully.")
         return self._lib
 
@@ -91,7 +90,5 @@ class _LazyLibrary:
         return getattr(self._load(), name)
 
 
-lib = _LazyLibrary()
-
-# Make FFI instance available for further usage
 ffi = FFI()
+lib = _LazyLibrary()
