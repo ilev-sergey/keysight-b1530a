@@ -19,12 +19,19 @@ from typing import Any
 
 from cffi import FFI
 
+logger = logging.getLogger(__name__)
 
-def load_library(header_path: Path, dll_path: Path) -> Any:
+LIBRARY_DIR = Path(__file__).parent / "lib"
+HEADER_FILE = LIBRARY_DIR / "wgfmu.h"
+DLL_FILE = LIBRARY_DIR / "wgfmu.dll"
+
+
+def load_library(ffi_instance: FFI, header_path: Path, dll_path: Path) -> Any:
     """
     Load the DLL that contains C functions for operating the B1530A device.
 
     Args:
+        ffi_instance: The shared FFI instance to use for cdef and dlopen
         header_path: Path to the header file
         dll_path: Path to the DLL file
 
@@ -36,12 +43,17 @@ def load_library(header_path: Path, dll_path: Path) -> Any:
 
     header = preprocess_header(header)
 
-    # Set up CFFI
-    ffi = FFI()
-    ffi.cdef(header)
+    ffi_instance.cdef(header)
 
     # Load the DLL
-    return ffi.dlopen(str(dll_path))
+    try:
+        return ffi_instance.dlopen(str(dll_path))
+    except OSError as e:
+        raise OSError(
+            f"Failed to load wgfmu.dll: {e}\n"
+            "This usually means Keysight IO Libraries Suite is not installed.\n"
+            "Download it from: https://www.keysight.com/find/iosuitedownload"
+        ) from e
 
 
 def preprocess_header(header_content: str) -> str:
@@ -60,15 +72,23 @@ def preprocess_header(header_content: str) -> str:
     return header_content
 
 
-logger = logging.getLogger(__name__)
+class _LazyLibrary:
+    """Proxy that defers DLL loading until first attribute access."""
 
-LIBRARY_DIR = Path(__file__).parent / "lib"
-HEADER_FILE = LIBRARY_DIR / "wgfmu.h"
-DLL_FILE = LIBRARY_DIR / "wgfmu.dll"
+    def __init__(self):
+        self._lib = None
 
-lib = load_library(HEADER_FILE, DLL_FILE)
+    def _load(self):
+        if self._lib is None:
+            self._lib = load_library(ffi, HEADER_FILE, DLL_FILE)
+            logger.info("WGFMU library loaded successfully.")
+        return self._lib
 
-# Make FFI instance available for further usage
+    def __getattr__(self, name):
+        if name == "_lib":
+            raise AttributeError(name)
+        return getattr(self._load(), name)
+
+
 ffi = FFI()
-
-logger.info("WGFMU library loaded successfully.")
+lib = _LazyLibrary()
