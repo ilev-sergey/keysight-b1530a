@@ -8,6 +8,7 @@ the all functions in the WGFMU library into meaningful Python exceptions with de
 The module includes:
 - `WGFMUErrorCode`: Enumeration of error codes defined by the WGFMU library
 - `WGFMUError`: Exception class for WGFMU-specific errors
+- `WGFMULibraryError`: Exception class for a driver library that could not be loaded
 - `check_error`: Decorator for automatically checking return values from WGFMU functions
 
 Example usage:
@@ -86,14 +87,22 @@ class WGFMUError(Exception):
 
         try:
             self.error_enum = WGFMUErrorCode(code)
-            self.message = ERROR_MESSAGES.get(
-                self.error_enum, f"Unknown error code: {code}"
-            )
+            self.message = ERROR_MESSAGES.get(self.error_enum, f"Unknown error code: {code}")
         except ValueError:
             self.error_enum = None
             self.message = f"Unknown error code: {code}"
 
         super().__init__(f"WGFMU Error {code}: {self.message}")
+
+
+class WGFMULibraryError(Exception):
+    """Exception raised when the WGFMU driver library is not usable.
+
+    Unlike `WGFMUError`, this does not come from the instrument: it means the
+    bundled `wgfmu.dll` could not be loaded at all, so no C function can be
+    called. Typical causes are running on a non-Windows platform, a 32/64-bit
+    mismatch, or a missing Keysight B1500A/WGFMU driver runtime.
+    """
 
 
 def check_error(func: Callable[..., Any]) -> Callable[..., Any]:
